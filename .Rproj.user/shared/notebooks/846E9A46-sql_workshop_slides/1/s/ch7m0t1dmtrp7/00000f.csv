@@ -1,0 +1,5 @@
+"0","# opening a connection"
+"0","con <- dbConnect(RSQLite::SQLite(), dbname = "":memory:"")"
+"0",""
+"0","# creating a new table from a dataframe"
+"0","dbWriteTable(con, ""mtcars"", mtcars)"

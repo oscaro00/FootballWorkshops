@@ -1,0 +1,8 @@
+"0","sql <- """
+"0","  SELECT Species, COUNT(*), AVG(`Sepal.Length`) as avg_length"
+"0","  FROM iris"
+"0","  GROUP BY Species"
+"0",""""
+"0",""
+"0","query <- dbSendQuery(con, sql)"
+"0","dbFetch(query)"
