@@ -1,0 +1,11 @@
+---
+title: "Shiny Workshop"
+author: "Oscar O'Brien"
+date: "2023-05-16"
+output: 
+  revealjs::revealjs_presentation:
+    theme: night
+    highlight: zenburn
+    transition: slide
+    increment: true
+---
