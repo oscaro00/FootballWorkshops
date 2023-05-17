@@ -111,6 +111,19 @@ dbWriteTable(con, "mtcars", mtcars)
     - Usually you provide username, password, host, port to connect to online server
 - con is initially empty, so we write the built-in mtcars table to a table called "mtcars"
 
+
+## A More Realistic Connection
+
+![](sql_images/sql_connection(1).png)
+
+- This is a SQL endpoint from AWS
+
+## Connection Continued
+
+![](sql_images/sql_connection.png)
+
+- This information is used in MySQL to connect to data not stored locally
+
 # Basic Functionality
 
 ```{r}
