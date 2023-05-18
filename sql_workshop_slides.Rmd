@@ -614,6 +614,13 @@ dbFetch(query)
 - Not covered:
     - maintaining tables
     - defining tables
+    
+    
+# Bonus
+
+SQL Murder Mystery
+
+https://mystery.knightlab.com/
 
 
 # References
