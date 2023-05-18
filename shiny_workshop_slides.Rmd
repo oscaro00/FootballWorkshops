@@ -9,3 +9,228 @@ output:
     transition: slide
     increment: true
 ---
+
+# Shiny
+
+- Shiny is an R package that enables the development of interactive web applications solely using R
+- Shiny simplifies normal web dev things such as HTML, CSS, and Javascript
+- Shiny apps have two main components:
+    - UI (frontend)
+    - Server (backend)
+    
+# Installing Shiny
+
+```{r}
+# install.packages("shiny") # run this once
+
+library(shiny)
+```
+
+
+# See Example Apps
+
+```{r}
+runExample(NA)
+
+# runExample("example_name")
+```
+
+- `NA` in `runExample` displays all 11 built-in shiny examples
+- Use `runExample` with one of the 11 listed apps to see it in action
+    - The apps will run as expected, but they also include annotated code to explain their core concept
+    
+
+# Structure of a Shiny App
+
+- 3 components live in app.R
+    - user interface (ui): controls the look of the app
+    - server function: builds the app and adds reactive component
+    - `shinyApp()` function call: displays the app
+
+
+
+## A Basic UI
+
+```{r eval=F}
+ui <- fluidPage(
+  titlePanel("Shiny App Title"),
+  
+  sidebarLayout(
+    
+    sidebarPanel(
+      # inputs/filters here
+    ),
+    
+    mainPanel(
+      # outputs (e.g. tables/plots) here
+    )
+  )
+)
+```
+
+- `fluidPage()` automatically rescales the window to fit the device
+- `sidebarLayout()` requires a `sidebarPanel()` and `mainPanel()`
+- Naming UI elements is important for controlling them with the server function
+
+## Hello Shiny UI Example
+
+![](shiny_images/hello_shiny_ui.png)
+
+## A Basic Server
+
+```{r eval=F}
+server <- function(input, output) {
+  # output code here
+}
+```
+
+- `server()` requires input and output parameters
+    - There are optional parameters that can be added (e.g. session)
+- `server()` creates a list of outputs for the UI to handle
+
+
+## Hello Shiny Server Example
+
+![](shiny_images/hello_shiny_server.png)
+
+
+
+## Running the App
+
+```{r eval=F}
+library(shiny)
+
+ui <- ...
+
+server <- ...
+
+shinyApp(ui = ui, server = server)
+```
+
+- `shinyApp()` requires a ui parameter and server parameter
+- Think of this function as the main function from other programming languages
+
+
+# Let's Create a New Shiny App
+
+```{r eval=F}
+library(shiny)
+
+ui <- fluidPage(
+
+)
+
+server <- function(input, output) {
+
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+- Create a new shiny app file
+    - This changes the "Run" option to "Run App"
+- This is the minimum amount of code to run a shiny app
+
+
+## Data Set Up
+
+```{r eval=F}
+library(shiny)
+library(tidyverse)
+library(nycflights13)
+
+data <- flights %>% filter(month == 1)
+
+ui <- fluidPage...
+```
+
+- Import `tidyverse` and `nycflights13` near the top of the file
+- Subset the flights table before the ui definition to just January to reduce data overhead
+    - This code will only be run once when the app is started
+
+
+# Creating the UI
+
+```{r eval=F}
+ui <- fluidPage(
+  titlePanel("Title panel"),
+  
+  sidebarLayout(
+    sidebarPanel("Sidebar panel"),
+    mainPanel("Main panel")
+  )
+)
+```
+
+- A sidebar layout is not required, but it is a very common layout with `fluidPage()`
+- Don't forget the commas!
+- `sidebarLayout()` takes a parameter `position="right"` to move the sidebar right
+
+
+## Adding HTML Content
+
+```{r eval=F}
+p("text") # paragraph text
+h1("text") # 1st header
+...
+h6("text") # 6th header (and last header)
+br() # line break
+code("code here") # code format
+strong("bold") # bold text
+em("italic") # italicized text
+# and more
+```
+
+- These are wrapper functions to HTML code
+- Add these to sidebar or main panels to see text
+- `align="center"` and other HTML parameters work in these functions
+
+## Changing App Text
+
+- Change the app title panel to "NYC Flights Dashboard"
+- Change the main panel to include a 3rd level header that says "Data from January of 2013"
+
+## Changing App Text Solution
+
+```{r eval=F}
+# ignoring unchanged lines
+
+titlePanel("NYC Flights Dashboard")
+
+mainPanel(h3("Data from January of 2013"))
+```
+
+
+## Adding Widgets
+
+- Widgets are things like buttons, sliders, menus, and input fields that make the app interactive
+- See [link](https://shiny.posit.co/r/gallery/widgets/widget-gallery/) for examples
+- Some options: `actionButton`, `checboxInput`, `dateInput`, `radioButtons`
+
+## Widget Structure
+
+```{r eval=F}
+actionButton("inputID", label = "widget_name")
+
+?selectInput
+```
+
+- All widgets need two components:
+    - An `inputID` so the server can associate a name to a value (not shown to the user)
+    - A `label` that is legible above the widget
+- Some widgets require additional parameters that can be found in their documentation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
