@@ -221,6 +221,46 @@ actionButton("inputID", label = "widget_name")
 - Some widgets require additional parameters that can be found in their documentation
 
 
+## Let's Add Some Widgets
+
+- In the sidebar section, add a `checkboxGroupInput` to filter the NY airport origin
+    - `?checkboxGroupInput` is helpful for the necessary parameters
+    - Check the `origin` column of the data to see the airport abbreviations
+    
+## Widget Solution
+
+```{r eval=F}
+sidebarPanel(
+  checkboxGroupInput("NY_airport", "Airports:",
+                      choices = c("EWR", "LGA", "JFK"),
+                      selected = c("EWR", "LGA", "JFK"))
+)
+```
+
+- `choices` and `selected` are the two required parameters
+
+## Additional Widgets
+
+```{r eval=F}
+sidebarPanel(
+  ...
+  
+  checkboxInput("include_delayed", "Include Delayed Flights",
+                value = TRUE),
+  
+  dateRangeInput("date_range", "Date Range:", 
+                 start = "2013-01-01", end = "2013-01-31",
+                 min = "2013-01-01", max = "2013-01-31"),
+  
+  sliderInput("distance", "Flight Distance:",
+              min = min_dist, max = max_dist,
+              value = c(min_dist, max_dist))
+)
+```
+
+
+# Creating the Server
+
 
 
 
