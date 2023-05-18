@@ -242,6 +242,10 @@ sidebarPanel(
 ## Additional Widgets
 
 ```{r eval=F}
+# under library() calls
+min_dist <- min(data$distance, na.rm = TRUE)
+max_dist <- max(data$distance, na.rm = TRUE)
+
 sidebarPanel(
   ...
   
@@ -258,13 +262,186 @@ sidebarPanel(
 )
 ```
 
+## Main Panel Output
+
+```{r eval=F}
+mainPanel(
+  
+  ___Output("output_name")
+  
+)
+```
+
+- These create placeholders for output in the UI
+- `output_name` must match name from the server function (yet to make)
+- Examples: `imageOutput()`, `plotOutput()`, `tableOutput()`, `textOutput()`, etc...
+
+
+## Adding Outputs to the Flights App
+
+- Within the main panel, lets add:
+    - a plot output called `flights_per_day`
+    - a plot output called `top_dest`
+    - a table output called `most_delayed`
+    
+## Adding Outputs Solution
+
+```{r eval=F}
+mainPanel(
+  h3("Data from January of 2013"),
+  
+  plotOutput("flights_per_day"),
+  plotOutput("top_dest"),
+
+  tableOutput("most_delayed")
+)
+```
+
+- Note the line separations will not create separation in the UI
+    - Use `br()` for break lines
 
 # Creating the Server
 
+```{r eval=F}
+server <- function(input, output) {
+  
+  output$output_name <- render___({
+    # code to create output here
+  })
+  
+}
+```
+
+- This is the general server structure
+- `input` and `output` parameters are required
+    - `input` gives values from widgets in the UI
+    - `output` is a named list for the UI to retrieve output objects
+    
+## Types of render___()
+
+- Examples: `renderImage()`, `renderPlot()`, `renderTable()`, `renderText()`
+- There is a one-to-one correspondence between `___Output()` in the UI and `render___()` in the server
+
+![](shiny_images/shiny_outputs.png)
+
+
+## How to Use Widget Values
+
+```{r eval=F}
+# in the UI
+selectInput("var", label = "Choose a variable:"
+            choices = c("A", "B", "C", "D", "E"),
+            selected = "A")
+
+textOutput("selected_var")
+
+# in the server
+output$selected_var <- renderText({
+  paste("You have selected", input$var)
+})
+```
+
+- `input$widget_id` within the server gives access to widget values
+    - Note: not all widgets are length 1 vectors
+- If a input value changes, shiny automatically updates its output
+    - This is what makes shiny so easy to use
+
+
+## Adding Server Functionality to Flights App
+
+```{r eval=F}
+output$flights_per_day <- renderPlot({
+  filtered_data() %>% select(day, origin) %>%
+    group_by(day, origin) %>%
+    summarize(total_flights = n()) %>%
+    ggplot(aes(x = day, y = total_flights, group = origin, color = origin)) +
+    geom_line() +
+    labs(x = "Day in January", y = "Number of Flights", title = "Flights by Day and Origin")
+})
+```
+
+- This is code required to create the `flights_per_day` plot
+- I will send the rest of the server code in slack to paste into your code
+
+
+# App Execution
+
+```{r eval=F}
+shinyApp(ui = ui, server = server)
+```
+
+- All shiny apps use this line of code to display the app
+- Knowing how the app updates itself is important for app performance and efficiency
+
+## App Updates
+
+- `shinyApp()` is run once when the app is first launched
+    - Load data, libraries, objects outside of `server`
+- `server` function runs once per user session (when app hosted online)
+- `render___()` are run each time one of their inputs changes
+    - Reduce inputs in `render___()` because one input changes requires the whole function to run again
+
+## Reactivity in Shiny
+
+![](shiny_images/shiny_reactivity.png)
+
+- This graphic is found on the shiny cheatsheet is more info about reactive functions
+- Ex: Reactivity can be controlled so outputs will only update after a submit button is pressed
+    - See `bindEvent()` documentation
 
 
 
+## Example of Reactive Function
 
+```{r eval=F}
+filtered_data <- reactive({
+    filtering <- data %>% filter(origin %in% input$NY_airport)
+    if (input$include_delayed) {}
+    else {
+      filtering <- filtering %>% filter(dep_delay <= 0)
+    }
+    filtering <- filtering %>% filter(day >= as.integer(str_sub(input$date_range[1], 9, 10)),
+                                      day <= as.integer(str_sub(input$date_range[2], 9, 10)))
+    filtering <- filtering %>% filter(distance >= input$distance[1],
+                                      distance <= input$distance[2])
+    filtering
+  })
+```
+
+- This reactive function filters the data based on the widgets
+- Instead of each function separately filtering the data the same way, this saves the data as `filtered_data()` which the functions can access
+- If a widget value changes, then `filtered_data()` updates automatically and the render functions will update
+
+
+# Bonus: Themes
+
+```{r eval=F}
+library(bslib)
+
+iu <- fluidPage(
+  theme = bs_theme(bootswatch = "darkly"),
+  ...
+)
+```
+
+- `bslib` offers easy to implement themes that improve the default shiny look
+    - See `bootswatch_themes()` to see available theme options
+- The themes can be personalized with `bs_theme()`
+    - See `?bs_theme` for more info
+    
+# Next Steps
+
+- [See Posit's Tutorial](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html)
+    - Heavily influenced this workshop
+- [Next Steps](https://shiny.posit.co/r/getstarted/next-steps/)
+- [Articles](https://shiny.posit.co/r/articles/)
+- [Gallery] (https://shiny.posit.co/r/gallery/)
+- NB: [Shiny for Python](https://shiny.rstudio.com/py/)
+
+# References
+
+- https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/
+- https://raw.githubusercontent.com/rstudio/cheatsheets/main/shiny.pdf
 
 
 
