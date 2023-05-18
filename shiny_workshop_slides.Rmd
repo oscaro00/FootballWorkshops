@@ -429,6 +429,13 @@ iu <- fluidPage(
 - The themes can be personalized with `bs_theme()`
     - See `?bs_theme` for more info
     
+# Workshop Content
+
+See slides and code from both workshops here:
+
+https://github.com/oscaro00/FootballWorkshops
+    
+
 # Next Steps
 
 - [See Posit's Tutorial](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html)
